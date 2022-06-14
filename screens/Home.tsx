@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View} from 'react-native';
+import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
 
 
 export default function Home(){
@@ -9,32 +9,41 @@ export default function Home(){
                 <Text style={styles.title}>BudgaPlus</Text>
                 <Text style={styles.subtitle}>Une meilleure gestion pour plus d'argent</Text>
             </View>
+
             <View style={styles.sectionLine}></View>
+
             <Text style={styles.soldText}>Votre solde de compte : </Text>
             <Text style={styles.soldNumber}>3255.12 €</Text>
-            <View style={styles.transactionsView}>
+            <View style={styles.sectionLine2}></View>
+            <View style={styles.buttonsView}>
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Ajouter un revenu</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Ajout une dépense</Text>
+                </TouchableOpacity>
+            </View>
+
+            <ScrollView style={styles.transactionsView}>
                 <Text style={styles.transactionTitle}>Dernières transactions : </Text>
-                <View style={styles.transaction}>
-                    <Text style={styles.transactionComment}>Rembours. resto</Text>
-                    <Text style={styles.transactionDate}>11/06/22</Text>
+
+                <Text style={styles.transactionDate}>Le 12 juin 2022</Text>
+                <View style={styles.transactionDesc}>
+                    <Text style={styles.transactionComment}>Remboursement resto</Text>
                     <Text style={styles.transactionAmmount}>+ 31€</Text>
                 </View>
-                <View style={styles.transaction}>
-                    <Text style={styles.transactionComment}>Achat aspirateur</Text>
-                    <Text style={styles.transactionDate}>11/06/22</Text>
+                <Text style={styles.transactionDate}>Le 05 juin 2022</Text>
+                <View style={styles.transactionDesc}>
+                    <Text style={styles.transactionComment}>Achat darty Aspi2000</Text>
                     <Text style={styles.transactionAmmount}>- 122.99€</Text>
                 </View>
-                <View style={styles.transaction}>
-                    <Text style={styles.transactionComment}>Courses</Text>
-                    <Text style={styles.transactionDate}>11/06/22</Text>
+                <Text style={styles.transactionDate}>Le 28 mai 2022</Text>
+                <View style={styles.transactionDesc}>
+                    <Text style={styles.transactionComment}>Courses Franprix</Text>
                     <Text style={styles.transactionAmmount}>- 83.57€</Text>
                 </View>
-                <View style={styles.transaction}>
-                    <Text style={styles.transactionComment}>prelev. frais banc.</Text>
-                    <Text style={styles.transactionDate}>11/06/22</Text>
-                    <Text style={styles.transactionAmmount}>- 83.57€</Text>
-                </View>
-            </View>
+            </ScrollView>
+
         </SafeAreaView>
     )
 }
@@ -46,7 +55,7 @@ const styles = StyleSheet.create({
     },
     titleView: {
         alignItems: 'center',
-        marginTop: 42,
+        marginTop: 30,
     },
     title: {
         color: 'white',
@@ -66,7 +75,7 @@ const styles = StyleSheet.create({
     soldText: {
         color: 'white',
         fontSize: 18,
-        marginTop: 25,
+        marginTop: 14,
         marginLeft: 15,
     },
     soldNumber: {
@@ -80,8 +89,28 @@ const styles = StyleSheet.create({
         paddingHorizontal: 14.5,
         borderRadius: 18,
     },
+    sectionLine2: {
+        borderTopWidth: 0.8,
+        borderTopColor: 'white',
+        marginTop: 22,
+    },
+    buttonsView: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        paddingTop: 28.5,
+    },
+    button: {
+        backgroundColor: 'white',
+        paddingVertical: 5.5,
+        paddingHorizontal: 14.5,
+        borderRadius: 18,
+    },
+    buttonText: {
+        color: 'mediumturquoise',
+        fontWeight: '600',
+    },
     transactionsView: {
-        marginTop: 34,
+        marginTop: 21.5,
     },
     transactionTitle: {
         color: 'white',
@@ -89,27 +118,34 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginBottom: 9,
     },
-    transaction: {
-        marginTop: 10,
+    transactionDate: {
+        textAlign: 'left',
+        fontSize: 12,
+        marginBottom: 3,
+        marginLeft: 9,
+    },
+    transactionDesc: {
+        marginBottom: 7.5,
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        backgroundColor: 'white',
+        marginHorizontal: 18,
+        paddingVertical: 2.5,
+        borderRadius: 4
         //borderBottomColor: 'black',
         //borderBottomWidth: 0.9,
     },
     transactionComment: {
-        width: '45%',
-        textAlign: 'center',
-    },
-    transactionDate: {
-        width: '29%',
-        textAlign: 'center',
-        borderLeftColor: 'black',
-        borderLeftWidth: 0.9,
-        borderRightColor: 'black',
-        borderRightWidth: 1,
+        width: '70%',
+        textAlign: 'left',
+        marginLeft: 10,
+        fontSize: 13,
+        fontWeight: '600'
     },
     transactionAmmount: {
-        width: '26%',
+        width: '30%',
         textAlign: 'center',
+        paddingRight: 20,
+        fontSize: 13,
+        fontWeight: '700'
     },
 })
