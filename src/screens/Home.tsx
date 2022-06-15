@@ -1,8 +1,12 @@
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList, BottomTabsParamList } from '../types';
 
+type HomeProps = NativeStackScreenProps<RootStackParamList>
 
-export default function Home(){
+export default function Home({navigation, route}: HomeProps){
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.titleView}>
@@ -16,10 +20,10 @@ export default function Home(){
             <Text style={styles.soldNumber}>3255.12 €</Text>
             <View style={styles.sectionLine2}></View>
             <View style={styles.buttonsView}>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity onPress={() => navigation.navigate('AddIncome')} style={styles.button}>
                     <Text style={styles.buttonText}>Ajouter un revenu</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity onPress={() => navigation.navigate('AddExpense')} style={styles.button}>
                     <Text style={styles.buttonText}>Ajout une dépense</Text>
                 </TouchableOpacity>
             </View>
@@ -101,20 +105,21 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: 'white',
-        paddingVertical: 5.5,
-        paddingHorizontal: 14.5,
-        borderRadius: 18,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 17,
     },
     buttonText: {
         color: 'mediumturquoise',
         fontWeight: '600',
+        fontSize: 14.5,
     },
     transactionsView: {
         marginTop: 21.5,
     },
     transactionTitle: {
         color: 'white',
-        fontSize: 16,
+        fontSize: 16.5,
         marginLeft: 15,
         marginBottom: 9,
     },
@@ -122,14 +127,14 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontSize: 12,
         marginBottom: 3,
-        marginLeft: 9,
+        marginLeft: 11,
     },
     transactionDesc: {
         marginBottom: 7.5,
         flexDirection: 'row',
         backgroundColor: 'white',
         marginHorizontal: 18,
-        paddingVertical: 2.5,
+        paddingVertical: 3.5,
         borderRadius: 4
         //borderBottomColor: 'black',
         //borderBottomWidth: 0.9,
