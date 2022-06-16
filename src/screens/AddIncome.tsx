@@ -3,21 +3,54 @@ import {SafeAreaView, ScrollView, TextInput, StyleSheet, Text, useColorScheme, V
 import FaIcon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList} from '../types';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import {setLocale} from 'yup'
 import CustomInput from '../components/customInput'
+import CustomDatePicker from '../components/CustomDatePicker'
+import CustomSelect from '../components/CustomSelect'
 
 type AddIncomeProps = NativeStackScreenProps<RootStackParamList, 'AddIncome'>
 
 
-
 export default function AddIncome({navigation, route}: AddIncomeProps){
 
-    type formValues = {
-        amount: undefined|number, 
-        date: undefined|string,
-        category: undefined|string,
-        comment: undefined|string,
-    }
+    //Liste des catégories de revenus
+    const categories = [
+        'Salaire et assimilé',
+        'Revenu financier',
+        'Rente',
+        'Pension alimentaire',
+        'Allocation chômage',
+        'Prestations sociales',
+        'Revenu foncier',
+        'Revenu exceptionnel',
+        'Autre revenu',
+    ]
+
+    setLocale({
+        number: {
+            min: 'Veuillez entrer un montant valide'
+        },
+        string: {
+          min: 'Deve ser maior que ${min}',
+        },
+      });
+      
+    // Yup
+    const IncomeSchema = Yup.object().shape({
+
+        amount: Yup.string().matches(/^([0-9]{1,6})([\.\,][0-9][0-9])?$/, 'Veuillez renseigner un montant valide' ),
+     
+        date: Yup.date().required('Ce champs est requis'),
+     
+        category: Yup.string().required('Ce champs est requis'),
+
+        comment: Yup.string().max(20, 'Le commentaire ne peut pas faire plus de 20 caractères').required('Ce champs est requis')
+     
+      });
+
+
     return(
         <SafeAreaView style={styles.container}>
             <FaIcon onPress={() => navigation.goBack()} name='chevron-left' color='white' size={18} style={styles.icon}/>
@@ -26,6 +59,7 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
                 <Text style={styles.subtitle}>Entrez vos recettes ici</Text>
             </View>
 
+            {/* Balise ouvrante Formik, avec valeurs init, prop validation (avec yup), et onSubmit */}
             <Formik
                 initialValues={{ 
                     amount: undefined, 
@@ -33,6 +67,7 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
                     category: undefined,
                     comment: undefined,
                 }}
+                validationSchema={IncomeSchema}
                 onSubmit={
                     (values):void => {
                         let checkValue:boolean = true
@@ -48,20 +83,25 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
                 }
             >
 
-                {({ handleChange, handleBlur, handleSubmit, values }) => (
+                {/* States Formik en argument, et Formulaire en retour de callback*/}
+                {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <View>
                         <View style={styles.form}>
                             <View>
                                 <CustomInput type='numeric' onChangeText={handleChange('amount')} onBlur={handleBlur('amount')} value={values.amount} placeholder='Entrez le montant'/>
+                                {errors.amount && touched.amount ? <Text style={styles.error}>{errors.amount}</Text> : null}
                             </View>
                             <View>
-                                <CustomInput type='date' onChangeText={handleChange('date')} onBlur={handleBlur('date')} value={values.date} placeholder='Entrez la date'/>
+                                <CustomDatePicker text='Entrez la date' onDatePick={handleChange('date')}/>
+                                {errors.date && touched.date ? <Text style={styles.error}>{errors.date}</Text> : null}
                             </View>
                             <View>
-                                <CustomInput onChangeText={handleChange('category')} onBlur={handleBlur('category')} value={values.category} placeholder='Entrez la catégorie de revenu'/>
+                                <CustomSelect onSelect={handleChange('category')}  defaultText='Catégorie de revenu' data={categories}/>
+                                {errors.category && touched.category ? <Text style={styles.error}>Veuillez renseigner une catégorie de revenu</Text> : null}
                             </View>
                             <View>
                                 <CustomInput onChangeText={handleChange('comment')} onBlur={handleBlur('comment')} value={values.comment} placeholder='Entrez un commentaire'/>
+                                {errors.comment && touched.comment ? <Text style={styles.error}>{errors.comment}</Text> : null}
                             </View>
                         </View>
                         <Button onPress={handleSubmit} title="Valider" />
@@ -77,7 +117,7 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'mediumturquoise'
+        backgroundColor: 'mediumturquoise',
     },
     icon: {
         marginTop: 19,
@@ -110,6 +150,10 @@ const styles = StyleSheet.create({
     form: {
         marginTop: 22,
         marginBottom: 26,
-    }
-
+    },
+    error: {
+        alignSelf: 'center',
+        color: 'red',
+        marginHorizontal: 5,
+    },
 })

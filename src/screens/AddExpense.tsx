@@ -6,15 +6,7 @@ import { RootStackParamList} from '../types';
 
 type AddExpenseProps = NativeStackScreenProps<RootStackParamList, 'AddExpense'>
 
-function myMap (array:Array<any>, callback: (arg:any) => any):Array<any>{
-    let funkArray = []
-    for (let i = 0; i <= array.length; i++){
-        funkArray.push(callback(array[i]))
-    }
-    return funkArray
-}
 
-const superArray = ['truc', 'mahcin', 'abracadabresque']
 
 export default function AddExpense({navigation, route}: AddExpenseProps){
     return(
@@ -25,9 +17,7 @@ export default function AddExpense({navigation, route}: AddExpenseProps){
                 <Text style={styles.subtitle}>Entrez vos dépenses ici</Text>
             </View>
             <View>
-                {
-                   myMap(superArray, (e) => <Text>{e}</Text>)
-                }
+
             </View>
         </SafeAreaView>
     )
