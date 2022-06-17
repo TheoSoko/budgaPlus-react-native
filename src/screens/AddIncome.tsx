@@ -27,15 +27,6 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
         'Revenu exceptionnel',
         'Autre revenu',
     ]
-
-    setLocale({
-        number: {
-            min: 'Veuillez entrer un montant valide'
-        },
-        string: {
-          min: 'Deve ser maior que ${min}',
-        },
-      });
       
     // Yup
     const IncomeSchema = Yup.object().shape({
@@ -50,9 +41,9 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
      
       });
 
-
     return(
         <SafeAreaView style={styles.container}>
+        <ScrollView>
             <FaIcon onPress={() => navigation.goBack()} name='chevron-left' color='white' size={18} style={styles.icon}/>
             <View style={styles.titleView}>
                 <Text style={styles.title}>Revenus</Text>
@@ -109,7 +100,7 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
                 )}
 
             </Formik>
-
+        </ScrollView>
         </SafeAreaView>
     )
 }

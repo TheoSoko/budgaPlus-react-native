@@ -1,13 +1,54 @@
 import React from 'react';
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
 
+type transaction = {
+    date: String
+    amount: String
+    category: String
+    comments: String
+    _id_expense?: String
+    _id_income?: String
+} 
+
+const accountData = require('../../assets/data/data.json')
+const dataIncomes = accountData[0].incomes
+const dataExpenses = accountData[0].expenses
+const transactionsData = dataIncomes.concat(dataExpenses)
+transactionsData.sort((a:{date:string}, b:{date:string}):number => {
+    let dateA = new Date(a.date).getTime()
+    let dateB = new Date(b.date).getTime()
+    return dateA - dateB
+})
+
+console.log(transactionsData)
+
+
 export default function Account(){
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.titleView}>
                 <Text style={styles.title}>Mon compte</Text>
-                <Text style={styles.subtitle}>Vous avez ici accès à toutes les transactions de votre compte</Text>
+                <Text style={styles.subtitle}>Vous avez accès ici à toutes les transactions de votre compte</Text>
             </View>
+
+            <ScrollView style={styles.transactionsView}>
+            <Text style={styles.transactionTitle}>Dernières transactions : </Text>
+
+                {
+                    transactionsData.map( (e:transaction, key:number) => {
+                        return (
+                            <View>
+                                <Text style={styles.transactionDate}>{e.date}</Text>
+                                <View style={styles.transactionDesc}>
+                                    <Text style={styles.transactionComment}>{e.comments}</Text>
+                                    <Text style={[styles.transactionAmmount, {color: e._id_expense ? 'red' : 'black'}]}>{e._id_income ? e.amount :  `- ${e.amount}`}</Text>
+                                </View>
+                            </View>
+                        )
+                    })
+                }
+
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -30,6 +71,8 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 12.5,
         marginTop: 4.5,
+        marginHorizontal: 33,
+        textAlign: 'center'
     },
     sectionLine: {
         borderTopWidth: 0.8,
@@ -48,7 +91,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         marginLeft: 15,
-        marginBottom: 9,
+        marginBottom: 13,
     },
     transactionDate: {
         textAlign: 'left',
@@ -60,7 +103,7 @@ const styles = StyleSheet.create({
         marginBottom: 7.5,
         flexDirection: 'row',
         backgroundColor: 'white',
-        marginHorizontal: 18,
+        marginHorizontal: 15,
         paddingVertical: 2.5,
         borderRadius: 4
         //borderBottomColor: 'black',
