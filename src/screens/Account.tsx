@@ -1,8 +1,10 @@
 import React from 'react';
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
+import moment from 'moment';
+import 'moment/locale/fr';
 
-type transaction = {
-    date: String
+type transactionType = {
+    date: string | number | Date
     amount: String
     category: String
     comments: String
@@ -14,13 +16,11 @@ const accountData = require('../../assets/data/data.json')
 const dataIncomes = accountData[0].incomes
 const dataExpenses = accountData[0].expenses
 const transactionsData = dataIncomes.concat(dataExpenses)
-transactionsData.sort((a:{date:string}, b:{date:string}):number => {
+transactionsData.sort((a:transactionType, b:transactionType):number => {
     let dateA = new Date(a.date).getTime()
     let dateB = new Date(b.date).getTime()
     return dateA - dateB
 })
-
-console.log(transactionsData)
 
 
 export default function Account(){
@@ -35,12 +35,14 @@ export default function Account(){
             <Text style={styles.transactionTitle}>Dernières transactions : </Text>
 
                 {
-                    transactionsData.map( (e:transaction, key:number) => {
+                    transactionsData.map( (e:transactionType, key:number) => {
+                        let date = moment(e.date)
+                        moment.locale('fr')
                         return (
-                            <View>
-                                <Text style={styles.transactionDate}>{e.date}</Text>
+                            <View key={key}>
+                                <Text style={styles.transactionDate}>{date.format('Do MMMM YYYY')}</Text>
                                 <View style={styles.transactionDesc}>
-                                    <Text style={styles.transactionComment}>{e.comments}</Text>
+                                    <Text style={styles.transactionComment}>{e.comments.length > 48 ? e.comments.replace(e.comments.substring(48), '...') : e.comments}</Text>
                                     <Text style={[styles.transactionAmmount, {color: e._id_expense ? 'red' : 'black'}]}>{e._id_income ? e.amount :  `- ${e.amount}`}</Text>
                                 </View>
                             </View>
@@ -95,32 +97,34 @@ const styles = StyleSheet.create({
     },
     transactionDate: {
         textAlign: 'left',
-        fontSize: 12,
+        fontSize: 12.5,
         marginBottom: 3,
         marginLeft: 9,
+        fontWeight: '500'
     },
     transactionDesc: {
         marginBottom: 7.5,
         flexDirection: 'row',
         backgroundColor: 'white',
-        marginHorizontal: 15,
-        paddingVertical: 2.5,
-        borderRadius: 4
+        marginHorizontal: 15.5,
+        paddingVertical: 3,
+        borderRadius: 4,
         //borderBottomColor: 'black',
         //borderBottomWidth: 0.9,
     },
     transactionComment: {
         width: '70%',
         textAlign: 'left',
-        marginLeft: 10,
+        marginLeft: 8,
         fontSize: 13,
-        fontWeight: '600'
+        fontWeight: '400',
+        paddingHorizontal: 6,
     },
     transactionAmmount: {
         width: '30%',
         textAlign: 'center',
-        paddingRight: 20,
-        fontSize: 13,
-        fontWeight: '700'
+        paddingRight: 13,
+        fontSize: 12.5,
+        fontWeight: '500'
     },
 })
