@@ -78,19 +78,19 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <View>
                         <View style={styles.form}>
-                            <View>
+                            <View style={styles.inputView}>
                                 <CustomInput type='numeric' onChangeText={handleChange('amount')} onBlur={handleBlur('amount')} value={values.amount} placeholder='Entrez le montant'/>
                                 {errors.amount && touched.amount ? <Text style={styles.error}>{errors.amount}</Text> : null}
                             </View>
-                            <View>
+                            <View style={styles.inputView}>
                                 <CustomDatePicker text='Entrez la date' onDatePick={handleChange('date')}/>
                                 {errors.date && touched.date ? <Text style={styles.error}>{errors.date}</Text> : null}
                             </View>
-                            <View>
+                            <View style={styles.inputView}>
                                 <CustomSelect onSelect={handleChange('category')}  defaultText='Catégorie de revenu' data={categories}/>
                                 {errors.category && touched.category ? <Text style={styles.error}>Veuillez renseigner une catégorie de revenu</Text> : null}
                             </View>
-                            <View>
+                            <View style={styles.inputView}>
                                 <CustomInput onChangeText={handleChange('comment')} onBlur={handleBlur('comment')} value={values.comment} placeholder='Entrez un commentaire'/>
                                 {errors.comment && touched.comment ? <Text style={styles.error}>{errors.comment}</Text> : null}
                             </View>
@@ -147,4 +147,7 @@ const styles = StyleSheet.create({
         color: 'red',
         marginHorizontal: 5,
     },
+    inputView: {
+        marginVertical: 1.5,
+    }
 })

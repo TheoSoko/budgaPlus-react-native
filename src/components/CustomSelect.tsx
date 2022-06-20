@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
       width: 195,
       height: 30,
       borderRadius: 3,
-      marginVertical: 10,
+      marginVertical: 8,
       alignSelf: 'center',
     },
     selectTextStyle:{

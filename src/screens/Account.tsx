@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
+import CustomSelect from '../components/CustomSelect'
 import moment from 'moment';
 import 'moment/locale/fr';
 
@@ -12,18 +13,31 @@ type transactionType = {
     _id_income?: String
 } 
 
-const accountData = require('../../assets/data/data.json')
-const dataIncomes = accountData[0].incomes
-const dataExpenses = accountData[0].expenses
-const transactionsData = dataIncomes.concat(dataExpenses)
-transactionsData.sort((a:transactionType, b:transactionType):number => {
-    let dateA = new Date(a.date).getTime()
-    let dateB = new Date(b.date).getTime()
-    return dateA - dateB
-})
+
 
 
 export default function Account(){
+
+    //States
+    const [user, setUser] = useState<number>(0)
+
+    //Tableaux des opérations triées par date
+    const accountData = require('../../assets/data/data.json')
+    const dataIncomes = accountData[user].incomes
+    const dataExpenses = accountData[user].expenses
+    const transactionsData = dataIncomes.concat(dataExpenses)
+    transactionsData.sort((a:transactionType, b:transactionType):number => {
+        let dateA = new Date(a.date).getTime()
+        let dateB = new Date(b.date).getTime()
+        return dateA - dateB
+    })
+
+    //Tableau des utilisateurs
+    let userArray:string[] = []
+    accountData.map((e:any) => userArray.push(e.user))
+    
+    
+
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.titleView}>
@@ -31,6 +45,11 @@ export default function Account(){
                 <Text style={styles.subtitle}>Vous avez accès ici à toutes les transactions de votre compte</Text>
             </View>
 
+            <View style={styles.selectView}>
+                <CustomSelect data={userArray} defaultText='Utilisateur' onSelect={(item, key) => setUser(key)}/>
+            </View>
+
+            <View style={styles.sectionLine}></View>
             <ScrollView style={styles.transactionsView}>
             <Text style={styles.transactionTitle}>Dernières transactions : </Text>
 
@@ -76,24 +95,23 @@ const styles = StyleSheet.create({
         marginHorizontal: 33,
         textAlign: 'center'
     },
+    selectView: {
+        marginTop: 11,
+    },
     sectionLine: {
         borderTopWidth: 0.8,
         borderTopColor: 'white',
-        marginTop: 29,
-    },
-    sectionLine2: {
-        borderTopWidth: 0.8,
-        borderTopColor: 'white',
-        marginTop: 22,
+        marginTop: 20,
     },
     transactionsView: {
-        marginTop: 20,
+        marginTop: 0,
     },
     transactionTitle: {
         color: 'white',
         fontSize: 16,
         marginLeft: 15,
         marginBottom: 13,
+        marginTop: 18,
     },
     transactionDate: {
         textAlign: 'left',
