@@ -50,7 +50,7 @@ export default function Statistics(){
     }
 
 
-    //console.warn(moment(sortedIncomes[0].date).format('MM'))
+    // console.warn(moment(sortedIncomes[0].date).format('MM'))
     // x: moment(transaction.date).format('MM')
 
 /*
