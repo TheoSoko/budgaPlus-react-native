@@ -4,6 +4,7 @@ import { VictoryBar, VictoryAxis, VictoryPolarAxis, VictoryArea, VictoryChart, V
 import {Dimensions} from 'react-native'
 import CustomSelect from '../components/CustomSelect'
 import moment from 'moment';
+import { array } from 'yup';
 
 const allAccountsData = require('../../assets/data/data.json') 
 const userList = () => {
@@ -34,11 +35,11 @@ export default function Statistics(){
         (new Date(incomeA.date).getTime() - new Date(incomeB.date).getTime())
     )
 
-    // Retourne tableau pour graphique
-    const getGraphData = (transactionsArray:Array<Object>, allTransactions?:boolean) => {
+    // Retourne tableau pour graphique (revenus, dépenses)
+    const getGraphData = (transactionsArray:Array<Object>) => {
         let graphData:object[] = []
         transactionsArray.map((transaction:any) => {
-            let formatedDate =  moment(transaction.date).format(allTransactions ? 'DD' : 'DD/MM')
+            let formatedDate =  moment(transaction.date).format('DD/MM')
             graphData.push(
                 {
                     y: parseInt(transaction.amount.replace('€', '').replace(',', '')),
@@ -47,7 +48,83 @@ export default function Statistics(){
             )
         })
         return graphData
+    }   
+
+    /*
+        Pour chaque objet, j'utilise la date pour déterminer dans quel attribut va la transaction
+        {
+            'Avril': {
+                incomes: [
+                    
+                ],
+                expenses: [
+                    
+                ],
+            }
+            'Mai': {
+                incomes: [
+                    
+                ],
+                expenses: [
+                    
+                ],
+            }
+            'Juin': {
+                incomes: [
+                    
+                ],
+                expenses: [
+                    
+                ],
+            }
+        }
+    */
+    const getBalanceGraphData = () => {
+        let balanceArray = {
+            april: {
+                incomes: new Array(),
+                expenses: new Array(),
+            },
+            may: {
+                incomes: new Array(),
+                expenses: new Array(),
+            },
+            june: {
+                incomes: new Array(),
+                expenses: new Array(),
+            },
+        }
+        sortedIncomes.map((transaction:any) => {
+            if (moment(transaction.date).format('MM') == '04'){
+                balanceArray.april.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+            } else if (moment(transaction.date).format('MM') == '05'){
+                balanceArray.may.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+            } else if (moment(transaction.date).format('MM') == '06'){
+                balanceArray.june.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+            }
+        })
+        sortedExpenses.map((transaction:any) => {
+            if (moment(transaction.date).format('MM') == '04'){
+                balanceArray.april.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+            } else if (moment(transaction.date).format('MM') == '05'){
+                balanceArray.may.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+            } else if (moment(transaction.date).format('MM') == '06'){
+                balanceArray.june.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+            }
+        }) 
+
+        return balanceArray
     }
+
+    function getSum(array:Array<number>){
+        let sum = 0
+        array.map(e => sum = sum + e)
+        return sum
+    }
+
+
+    //console.warn()
+
 
 
     // console.warn(moment(sortedIncomes[0].date).format('MM'))
@@ -84,7 +161,7 @@ export default function Statistics(){
 
                 <Text style={styles.sectionTitle}>Solde Mensuel</Text>
                 <VictoryChart theme={VictoryTheme.material}>
-                    <VictoryArea data={getGraphData(sortedTransactions, true)} />
+                    <VictoryArea data={getGraphData(sortedTransactions)} />
                 </VictoryChart>
 
   
