@@ -10,6 +10,10 @@ import CustomInput from '../components/customInput'
 import CustomDatePicker from '../components/CustomDatePicker'
 import CustomSelect from '../components/CustomSelect'
 
+import {addIncomeData} from '../../database'
+
+
+
 type AddIncomeProps = NativeStackScreenProps<RootStackParamList, 'AddIncome'>
 
 
@@ -37,9 +41,9 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
      
         category: Yup.string().required('Ce champs est requis'),
 
-        comment: Yup.string().max(20, 'Le commentaire ne peut pas faire plus de 20 caractères').required('Ce champs est requis')
+        comment: Yup.string().max(20, 'Le commentaire ne peut pas faire plus de 20 caractères').required('Ce champs est requis'),
      
-      });
+    })
 
     return(
         <SafeAreaView style={styles.container}>
@@ -68,7 +72,7 @@ export default function AddIncome({navigation, route}: AddIncomeProps){
                             }
                         })
                         if (checkValue === true){
-                            console.warn(values)
+                            addIncomeData(values)
                         }
                     }
                 }

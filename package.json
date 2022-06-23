@@ -26,6 +26,7 @@
     "react-native-select-dropdown": "^2.0.3",
     "react-native-svg": "^12.3.0",
     "react-native-vector-icons": "^9.1.0",
+    "realm": "^10.19.2",
     "victory": "^36.5.0",
     "victory-native": "^36.5.0",
     "yup": "^0.32.11"

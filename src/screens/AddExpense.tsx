@@ -10,6 +10,10 @@ import CustomInput from '../components/customInput'
 import CustomDatePicker from '../components/CustomDatePicker'
 import CustomSelect from '../components/CustomSelect'
 
+import {addExpenseData} from '../../database'
+
+
+
 type AddExpenseProps = NativeStackScreenProps<RootStackParamList, 'AddExpense'>
 
 
@@ -38,7 +42,7 @@ export default function AddExpense({navigation, route}: AddExpenseProps){
      
         category: Yup.string().required('Veuillez renseigner une catégorie de dépense'),
 
-        comment: Yup.string().max(20, 'Le commentaire ne peut pas faire plus de 20 caractères').required('Ce champs est requis')
+        comment: Yup.string().max(20, 'Le commentaire ne peut pas faire plus de 20 caractères')
      
       });
 
@@ -70,7 +74,7 @@ export default function AddExpense({navigation, route}: AddExpenseProps){
                             }
                         })
                         if (checkValue === true){
-                            console.warn(values)
+                            addExpenseData(values)
                         }
                     }
                 }
