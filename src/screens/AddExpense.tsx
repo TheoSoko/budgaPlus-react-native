@@ -45,7 +45,9 @@ export default function AddExpense({navigation, route}: AddExpenseProps){
         comment: Yup.string().max(20, 'Le commentaire ne peut pas faire plus de 20 caractères')
      
       });
+    
 
+    //Return
     return(
         <SafeAreaView style={styles.container}>
         <ScrollView>
@@ -80,7 +82,7 @@ export default function AddExpense({navigation, route}: AddExpenseProps){
                 }
             >
 
-                {/* States Formik en argument, et Formulaire en retour de callback*/}
+                {/* States Formik en argument, et Formulaire en retour */}
                 {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                     <View>
                         <View style={styles.form}>

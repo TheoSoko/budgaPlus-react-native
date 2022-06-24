@@ -26,7 +26,7 @@ export default function Statistics(){
     const allData = incomes.concat(expenses)
 
     //Classement des transactions par date
-    const sortedIncomes = incomes.sort((incomeA:any, incomeB:any) =>
+    const sortedIncomes = incomes.sort((incomeA:{date: string}, incomeB:{date: string}) =>
         (new Date(incomeA.date).getTime() - new Date(incomeB.date).getTime())
     )
     const sortedExpenses = expenses.sort((incomeA:any, incomeB:any) =>

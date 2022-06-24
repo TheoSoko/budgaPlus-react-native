@@ -2,9 +2,9 @@ import Realm from 'realm';
 
 const incomeSchema = {
     name: 'Income',
-    primaryKey: '_id',
+    primaryKey: '_id_income',
     properties: {
-      _id: 'int',
+      _id_income: 'int',
       amount: 'int',
       date: 'string',
       category: 'string',
@@ -14,9 +14,9 @@ const incomeSchema = {
 
 const expenseSchema = {
   name: 'Expense',
-  primaryKey: '_id',
+  primaryKey: '_id_expense',
   properties: {
-    _id: 'int',
+    _id_expense: 'int',
     amount: 'int',
     recipient: 'string',
     date: 'string',
@@ -28,24 +28,24 @@ const expenseSchema = {
 //Fonction Ajout de revenus à la base de données
 function addIncomeData(values:any):void{
   
-    const realm = new Realm({schema: [incomeSchema], schemaVersion: 1})
+    const realm = new Realm({schema: [incomeSchema], schemaVersion: 2})
   
     function getNextIncomeId():number{
-        let lastEntry = realm.objects<{_id:number}>('Income').sorted('_id', true)[0]
-        return lastEntry !== undefined ? (lastEntry._id + 1) : 0
+        let lastEntry = realm.objects<{_id_income:number}>('Income').sorted('_id_income', true)[0]
+        return lastEntry !== undefined ? (lastEntry._id_income + 1) : 0
     }
     realm.write(() => {
         realm.create('Income', {
-            _id: getNextIncomeId(),
+            _id_income: getNextIncomeId(),
             amount: parseInt(values.amount.replace('.', '').replace(',', '').replace(' ', '')),
             date: values.date,
             category: values.category,
             comment: values.comment,
         })
     })
-  
-    console.warn(realm.objects<{_id:number}>('Income').sorted('_id', true))
-    
+
+    console.warn(realm.objects<{_id_income:number}>('Income').sorted('_id_income', true))
+
     realm.close()
 
 }
@@ -53,15 +53,15 @@ function addIncomeData(values:any):void{
 //Fonction Ajout de revenus à la base de données
 function addExpenseData(values:any):void{
   
-    const realm = new Realm({schema: [expenseSchema], schemaVersion: 1})
+    const realm = new Realm({schema: [expenseSchema], schemaVersion: 2})
 
     function getNextExpenseId():number{
-        let lastEntry = realm.objects<{_id:number}>('Expense').sorted('_id', true)[0]
-        return lastEntry !== undefined ? (lastEntry._id + 1) : 0
+        let lastEntry = realm.objects<{_id_expense:number}>('Expense').sorted('_id_expense', true)[0]
+        return lastEntry !== undefined ? (lastEntry._id_expense + 1) : 0
     }
     realm.write(() => {
         realm.create('Expense', {
-            _id: getNextExpenseId(),
+            _id_expense: getNextExpenseId(),
             amount: parseInt(values.amount.replace('.', '').replace(',', '').replace(' ', '')),
             recipient: values.recipient,
             date: values.date,
@@ -70,19 +70,25 @@ function addExpenseData(values:any):void{
         })
     })
 
-    console.warn(realm.objects('Expense').sorted('_id', true))
-    
+    console.warn(realm.objects('Expense').sorted('_id_expense', true))
+
     realm.close()
 
 }
 
-/*
-let getAllIncomes = () => {
-    return realm.objects('Income');
-}
-*/
 
-export {addIncomeData, addExpenseData}
+function getAll(){
+
+    const realm = new Realm({schema: [expenseSchema], schemaVersion: 2})
+    
+    console.warn(realm.objects('Expense'))
+
+    realm.close()
+
+}
+
+
+export {addIncomeData, addExpenseData, getAll}
 
 
 

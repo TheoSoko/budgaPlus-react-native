@@ -12,8 +12,6 @@ import CustomSelect from '../components/CustomSelect'
 
 import {addIncomeData} from '../../database'
 
-
-
 type AddIncomeProps = NativeStackScreenProps<RootStackParamList, 'AddIncome'>
 
 

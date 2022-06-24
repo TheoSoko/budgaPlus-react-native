@@ -7,6 +7,9 @@ import AddExpense from './src/screens/AddExpense'
 import { RootStackParamList } from './src/types';
 import TabNavigation from './src/navigation/TabNavigation'
 
+//Définit Moment locale
+import 'moment/locale/fr';
+//
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 

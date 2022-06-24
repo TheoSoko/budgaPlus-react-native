@@ -5,7 +5,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 
 
 type selectProps = {
-    onSelect(item:string, key:number):void,
+    onSelect: (item:string, key:number) => void,
     data:Array<any>, 
     defaultText:string
 }

@@ -3,6 +3,8 @@ import React from 'react';
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList, BottomTabsParamList } from '../types';
+import {getAll} from '../../database'
+
 
 type HomeProps = NativeStackScreenProps<RootStackParamList>
 
