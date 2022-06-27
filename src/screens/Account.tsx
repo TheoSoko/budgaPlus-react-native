@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View, TouchableOpacity} from 'react-native';
 import CustomSelect from '../components/CustomSelect'
 import moment from 'moment';
+import 'moment/locale/fr';
 
 type transactionType = {
     date: string | number | Date
@@ -22,8 +23,8 @@ export default function Account(){
 
     //Tableaux des opérations triées par date
     const accountData = require('../../assets/data/data.json')
-    const dataIncomes:Array<transactionType> = accountData[user].incomes
-    const dataExpenses:Array<transactionType> = accountData[user].expenses
+    const dataIncomes = accountData[user].incomes
+    const dataExpenses = accountData[user].expenses
     const transactionsData = dataIncomes.concat(dataExpenses)
     transactionsData.sort((a:transactionType, b:transactionType):number => {
         let dateA = new Date(a.date).getTime()
@@ -54,8 +55,8 @@ export default function Account(){
 
                 {
                     transactionsData.map( (e:transactionType, key:number) => {
-                        //Moment locale est définit dans App.tsx
                         let date = moment(e.date)
+                        moment.locale('fr')
                         return (
                             <View key={key}>
                                 <Text style={styles.transactionDate}>{date.format('Do MMMM YYYY')}</Text>

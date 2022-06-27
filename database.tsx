@@ -25,18 +25,27 @@ const expenseSchema = {
   }
 }
 
+/*
+const userSchema = {
+    name: 'User',
+    primaryKey: '_id',
+    properties: {
+        _id: 'number',
+        incomes: '{ type: "list", objectType: "incomeSchema" }',
+        expenses: '{ type: "list", objectType: "expenseSchema" }',
+    }
+}
+*/
+
+
 //Fonction Ajout de revenus à la base de données
 function addIncomeData(values:any):void{
   
-    const realm = new Realm({schema: [incomeSchema], schemaVersion: 2})
-  
-    function getNextIncomeId():number{
-        let lastEntry = realm.objects<{_id_income:number}>('Income').sorted('_id_income', true)[0]
-        return lastEntry !== undefined ? (lastEntry._id_income + 1) : 0
-    }
+    const realm = new Realm({schema: [incomeSchema], schemaVersion: 3})
+
     realm.write(() => {
         realm.create('Income', {
-            _id_income: getNextIncomeId(),
+            _id_income: parseInt('' + new Date().getTime() + Math.floor(Math.random()*1000)),
             amount: parseInt(values.amount.replace('.', '').replace(',', '').replace(' ', '')),
             date: values.date,
             category: values.category,
@@ -53,15 +62,11 @@ function addIncomeData(values:any):void{
 //Fonction Ajout de revenus à la base de données
 function addExpenseData(values:any):void{
   
-    const realm = new Realm({schema: [expenseSchema], schemaVersion: 2})
+    const realm = new Realm({schema: [expenseSchema], schemaVersion: 3})
 
-    function getNextExpenseId():number{
-        let lastEntry = realm.objects<{_id_expense:number}>('Expense').sorted('_id_expense', true)[0]
-        return lastEntry !== undefined ? (lastEntry._id_expense + 1) : 0
-    }
     realm.write(() => {
         realm.create('Expense', {
-            _id_expense: getNextExpenseId(),
+            _id_expense: parseInt('' + new Date().getTime() + Math.floor(Math.random()*1000)),
             amount: parseInt(values.amount.replace('.', '').replace(',', '').replace(' ', '')),
             recipient: values.recipient,
             date: values.date,
@@ -70,25 +75,35 @@ function addExpenseData(values:any):void{
         })
     })
 
-    console.warn(realm.objects('Expense').sorted('_id_expense', true))
-
-    realm.close()
-
-}
-
-
-function getAll(){
-
-    const realm = new Realm({schema: [expenseSchema], schemaVersion: 2})
-    
     console.warn(realm.objects('Expense'))
 
     realm.close()
 
 }
 
+//getAll
+function getAllIncomes(){
 
-export {addIncomeData, addExpenseData, getAll}
+    const realm = new Realm({schema: [incomeSchema], schemaVersion: 3})
+    
+    return realm.objects('Income').sorted('_id_income')
+
+    realm.close()
+
+}
+
+function deletelastIncome(){
+    const realm = new Realm({schema: [incomeSchema], schemaVersion: 3})
+
+    let lastIncome =  realm.objects('Income').sorted('_id_income')[0]
+    realm.write(() => {
+        realm.delete(lastIncome)
+    })
+    realm.close()
+}
+
+
+export {addIncomeData, addExpenseData, getAllIncomes, deletelastIncome}
 
 
 

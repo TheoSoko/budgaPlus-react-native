@@ -32,9 +32,6 @@ export default function Statistics(){
     const sortedExpenses = expenses.sort((incomeA:any, incomeB:any) =>
         (new Date(incomeA.date).getTime() - new Date(incomeB.date).getTime())
     )
-    const sortedTransactions = allData.sort((incomeA:any, incomeB:any) =>
-        (new Date(incomeA.date).getTime() - new Date(incomeB.date).getTime())
-    )
 
     // Retourne tableau pour graphique (revenus, dépenses)
     const getGraphData = (transactionsArray:Array<Object>) => {
@@ -51,87 +48,71 @@ export default function Statistics(){
         return graphData
     }   
 
-    /*
-        Pour chaque objet, j'utilise la date pour déterminer dans quel attribut va la transaction
-        {
-            'Avril': {
-                incomes: [
-                    
-                ],
-                expenses: [
-                    
-                ],
-            }
-            'Mai': {
-                incomes: [
-                    
-                ],
-                expenses: [
-                    
-                ],
-            }
-            'Juin': {
-                incomes: [
-                    
-                ],
-                expenses: [
-                    
-                ],
-            }
-        }
-    */
-    const getBalanceGraphData = () => {
-        let balanceArray = {
+
+    //Retourne tableau solde pour graphique
+    function  getBalanceGraphData(){
+        let balanceList = {
             april: {
                 incomes: new Array(),
                 expenses: new Array(),
+                balance: 0
             },
             may: {
                 incomes: new Array(),
                 expenses: new Array(),
+                balance: 0
             },
             june: {
                 incomes: new Array(),
                 expenses: new Array(),
+                balance: 0
             },
         }
+        //push les revenus dans les tableaux de balanceList
         sortedIncomes.map((transaction:any) => {
             if (moment(transaction.date).format('MM') == '04'){
-                balanceArray.april.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+                balanceList.april.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
             } else if (moment(transaction.date).format('MM') == '05'){
-                balanceArray.may.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+                balanceList.may.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
             } else if (moment(transaction.date).format('MM') == '06'){
-                balanceArray.june.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+                balanceList.june.incomes.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
             }
         })
+        //push les revenus dans les tableaux de balanceList
         sortedExpenses.map((transaction:any) => {
             if (moment(transaction.date).format('MM') == '04'){
-                balanceArray.april.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+                balanceList.april.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
             } else if (moment(transaction.date).format('MM') == '05'){
-                balanceArray.may.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+                balanceList.may.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
             } else if (moment(transaction.date).format('MM') == '06'){
-                balanceArray.june.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
+                balanceList.june.expenses.push(parseInt(transaction.amount.replace('€', '').replace(',', '')))
             }
         }) 
 
-        return balanceArray
+        //Function addition pour tableau
+        const getArraySum = (array:Array<number|void>) => {
+            let sum = 0
+            array.map(e => {(e === undefined) ? (sum = sum + 0) : (sum = sum + e)})
+            return sum
+        }
+
+        //Définit les soldes par mois dans balanceList
+        Object.entries(balanceList).forEach((e:any) => {
+            e[1]['balance'] = ( getArraySum(e[1]['incomes']) - getArraySum(e[1]['expenses']) )
+        })
+        
+        //Définit les données pour le graphique
+        let graphData:object[] = []
+        Object.entries(balanceList).forEach((e:any) => {
+            graphData.push({ y: e[1]['balance'], x: e[0]})
+        })
+        
+        return graphData
     }
 
-    function getSum(array:Array<number>){
-        let sum = 0
-        array.map(e => sum = sum + e)
-        return sum
-    }
-
-
-    //console.warn()
-
-
-
-    // console.warn(moment(sortedIncomes[0].date).format('MM'))
-    // x: moment(transaction.date).format('MM')
 
 /*
+    Data pour Victory
     [
         {y: 5, x: 'Mars'},
         {y: 6, x: 'Avril'},
@@ -162,10 +143,11 @@ export default function Statistics(){
 
                 <Text style={styles.sectionTitle}>Solde Mensuel</Text>
                 <VictoryChart theme={VictoryTheme.material}>
-                    <VictoryArea data={getGraphData(sortedTransactions)} />
+                    <VictoryAxis fixLabelOverlap={true} orientation="bottom" offsetY={46} />
+                    <VictoryAxis dependentAxis/>
+                    <VictoryLine data={getBalanceGraphData()} style={{ data: {stroke: '#c43a31', strokeWidth: 7, strokeLinecap: 'round'} }}/>
                 </VictoryChart>
 
-  
             </View>
         </ScrollView>
     )
